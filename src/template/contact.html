@@ -36,7 +36,7 @@
         </div>
 
         <div class="about-me">
-            <form action="mailto:enoshlartey3@gmail.com" method="POST" enctype="text/plain">
+            <form id="contactForm" onsubmit="handleSubmit(event)">
                 <label for="user-email">Your Email:</label>
                 <input type="email" id="user-email" name="user-email" required>
                 <label for="subject">Subject:</label>
@@ -47,6 +47,33 @@
             </form>
         </div>
     </div>
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch('/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert('Email sent successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to send email.');
+            });
+        }
+    </script>
 </body>
 
 </html>
